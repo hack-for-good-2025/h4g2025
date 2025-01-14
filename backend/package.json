@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
@@ -19,13 +18,3 @@
     "nodemon": "^3.1.9"
   }
 }
-=======
-  "name": "h4g2025",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "npm run dev --prefix frontend",
-    "build": "npm run build --prefix frontend",
-    "start": "npm run start --prefix backend"
-  }
-}
->>>>>>> 239033728a99285bb60b31f2a11b01758d4838a0
