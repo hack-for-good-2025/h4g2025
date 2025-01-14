@@ -2,8 +2,8 @@
   "name": "h4g2025",
   "version": "1.0.0",
   "scripts": {
-    "dev": "npm run dev --prefix frontend",
+    "dev": "npm run dev --prefix backend",
     "build": "npm run build --prefix frontend",
-    "start": "npm run start --prefix backend"
+    "start": "npm run start --prefix frontend"
   }
 }
