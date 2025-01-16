@@ -5,6 +5,7 @@ const {
   signInWithEmailAndPassword,
   updateProfile,
 } = require("firebase/auth");
+const Email = require("../utils/email");
 const router = express.Router();
 
 // Sign up
@@ -27,7 +28,6 @@ router.post("/signup", async (req, res) => {
     if (auth.currentUser) {
       await updateProfile(auth.currentUser, { displayName: username });
     }
-
     const user = userCredential.user;
     res.status(201).send({
       status: "success",
@@ -72,6 +72,7 @@ router.post("/login", async (req, res) => {
       password
     );
     const user = userCredential.user;
+    await new Email().sendReminder();
 
     res.status(200).send({
       status: "success",

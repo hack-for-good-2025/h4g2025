@@ -4,7 +4,9 @@ const meetingsRoutes = require("./routes/meetings");
 const app = express();
 const port = 8000;
 const cors = require("cors");
+const dotenv = require("dotenv");
 
+dotenv.config({ path: './config.env' });
 // Implement CORS
 app.use(cors());
 app.options("*", cors());
