@@ -3,9 +3,10 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./Contexts/AuthContext";
 import ProtectedRoute from "./Pages/ProtectedRoute";
 
-import Navigation from "./Components/Navigation.tsx";
+//import Navigation from "./Components/Navigation.tsx";
 import SpinnerFull from "./Components/SpinnerFull.tsx";
 import CalenderPage from "./Pages/CalenderPage.tsx";
+import { MeetingsProvider } from "./Contexts/MeetingsContext.tsx";
 
 const HomePage = lazy(() => import("./Pages/HomePage"));
 const Login = lazy(() => import("./Pages/Login"));
@@ -16,25 +17,27 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <header>
-          <Navigation />
-        </header>
-        <Suspense fallback={<SpinnerFull />}>
-          <Routes>
-            <Route index element={<HomePage />} />
-            <Route
-              path="calender"
-              element={
-                <ProtectedRoute>
-                  <CalenderPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="login" element={<Login />} />
-            <Route path="create" element={<CreateUser />} />
-            <Route path="*" element={<PageNotFound />} />
-          </Routes>
-        </Suspense>
+        <MeetingsProvider>
+          <header>
+            {/* <Navigation /> */}
+          </header>
+          <Suspense fallback={<SpinnerFull />}>
+            <Routes>
+              <Route index element={<HomePage />} />
+              <Route
+                path="calender"
+                element={
+                  <ProtectedRoute>
+                    <CalenderPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="login" element={<Login />} />
+              <Route path="create" element={<CreateUser />} />
+              <Route path="*" element={<PageNotFound />} />
+            </Routes>
+          </Suspense>
+        </MeetingsProvider>
       </AuthProvider>
     </BrowserRouter>
   );

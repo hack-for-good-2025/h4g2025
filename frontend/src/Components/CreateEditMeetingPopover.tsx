@@ -1,39 +1,30 @@
 import React, { useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import '../App.css';
+import { Meeting } from '../Models/MeetingsModels';
 
-interface NewMeetingPopoverProps {
+interface CreateEditMeetingPopoverProps {
   onSave: (meeting: Meeting) => void;
   onClose: () => void;
+  meeting?: Meeting;
 }
 
-interface Meeting {
-  id: string;
-  title: string;
-  startTime: Dayjs;
-  endTime: Dayjs;
-  description: string;
-  organiserId: string;
-  participants: string[];
-}
-
-const NewMeetingPopover: React.FC<NewMeetingPopoverProps> = ({ onSave, onClose }) => {
-  const [title, setTitle] = useState('');
-  const [startTime, setStartTime] = useState<Dayjs | null>(null);
-  const [endTime, setEndTime] = useState<Dayjs | null>(null);
-  const [description, setDescription] = useState('');
-  const [organiserId, setOrganiserId] = useState('');
-  const [participants, setParticipants] = useState<string[]>([]);
+const CreateEditMeetingPopover: React.FC<CreateEditMeetingPopoverProps> = ({ onSave, onClose, meeting }) => {
+  const [title, setTitle] = useState(meeting?.title || '');
+  const [start_time, setStartTime] = useState<Dayjs | null>(meeting?.start_time || null);
+  const [end_time, setEndTime] = useState<Dayjs | null>(meeting?.end_time || null);
+  const [description, setDescription] = useState(meeting?.description || '');
+  const [organiser_id, setOrganiserId] = useState(meeting?.organiser_id || '');
+  const [participants, setParticipants] = useState<string[]>(meeting?.participants || []);
 
   const handleSave = () => {
-    if (title && startTime && endTime && organiserId) {
+    if (title && start_time && end_time && organiser_id) {
       const newMeeting: Meeting = {
-        id: Math.random().toString(36).substr(2, 9), // Generate a random ID
         title,
-        startTime,
-        endTime,
+        start_time,
+        end_time,
         description,
-        organiserId,
+        organiser_id,
         participants,
       };
       onSave(newMeeting);
@@ -53,11 +44,11 @@ const NewMeetingPopover: React.FC<NewMeetingPopoverProps> = ({ onSave, onClose }
         </div>
         <div>
           <label>Start Time:</label>
-          <input type="datetime-local" onChange={(e) => setStartTime(dayjs(e.target.value))} required />
+          <input type="datetime-local" value={start_time?.format("YYYY-MM-DDThh:mm")} onChange={(e) => setStartTime(dayjs(e.target.value))} required />
         </div>
         <div>
           <label>End Time:</label>
-          <input type="datetime-local" onChange={(e) => setEndTime(dayjs(e.target.value))} required />
+          <input type="datetime-local" value={end_time?.format("YYYY-MM-DDThh:mm")} onChange={(e) => setEndTime(dayjs(e.target.value))} required />
         </div>
         <div>
           <label>Description:</label>
@@ -65,7 +56,7 @@ const NewMeetingPopover: React.FC<NewMeetingPopoverProps> = ({ onSave, onClose }
         </div>
         <div>
           <label>Organiser ID:</label>
-          <input type="text" value={organiserId} onChange={(e) => setOrganiserId(e.target.value)} required />
+          <input type="text" value={organiser_id} onChange={(e) => setOrganiserId(e.target.value)} required />
         </div>
         <div>
           <label>Participants:</label>
@@ -80,4 +71,4 @@ const NewMeetingPopover: React.FC<NewMeetingPopoverProps> = ({ onSave, onClose }
   );
 };
 
-export default NewMeetingPopover;
+export default CreateEditMeetingPopover;

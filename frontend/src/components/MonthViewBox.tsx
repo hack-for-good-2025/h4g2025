@@ -13,11 +13,10 @@ export default function MonthViewBox({
         return <div className="h-12 w-full border md:h-28 md:w-full lg:h-full"></div>
     }
 
+    const { meetings, selectedMonthIndex } = useMeetings();
     const isFirstDay = day.date() === 1;
     const isToday = day.isSame(new Date(), "day");
-    const isCurrentMonth = day.isSame(new Date(), "month");
-    const { meetings } = useMeetings();
-    console.log(meetings)
+    const isCurrentMonth = day.month() === ((selectedMonthIndex % 12) + 12) % 12;
 
     return (
         <div

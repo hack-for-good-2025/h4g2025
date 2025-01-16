@@ -1,15 +1,26 @@
-import React, { createContext } from 'react';
-import { Meeting, MeetingsContextType, State } from '../Models/MeetingsModels';
+import React, { createContext, useEffect } from 'react';
+import { Action, Meeting, MeetingsContextType, State } from '../Models/MeetingsModels';
 import dayjs, { Dayjs } from 'dayjs';
-import { Action } from '../Models/MeetingsModels';
 
 const initialState = {
     userSelectedDate: dayjs(new Date()),
     monthArray: [] as Dayjs[][],
-    selectedMonthIndex: 0,
+    selectedMonthIndex: dayjs().month(),
     meetings: [] as Meeting[],
     isLoading: false,
 };
+
+function meetingMapper(meeting: Meeting) {
+    return {
+        id: meeting.id,
+        title: meeting.title,
+        description: meeting.description,
+        start_time: dayjs(meeting.start_time),
+        end_time: dayjs(meeting.end_time),
+        organiser_id: meeting.organiser_id,
+        participants: meeting.participants,
+    };
+}
 
 function reducer(state: State, action: Action): State {
     switch (action.type) {
@@ -25,6 +36,8 @@ function reducer(state: State, action: Action): State {
             return { ...state, meetings: state.meetings.filter(meeting => meeting.id !== action.payload) };
         case 'toggleLoading':
             return { ...state, isLoading: !state.isLoading };
+        case 'setUserSelectedMonth':
+            return { ...state, selectedMonthIndex: action.payload.index, monthArray: action.payload.monthArray };
         default:
             throw new Error('unknown action');
     }
@@ -38,18 +51,19 @@ const MeetingsContext = createContext<MeetingsContextType>({
     putMeeting: async () => {},
     deleteMeeting: async () => {},
     toggleLoading: () => {},
+    setUserSelectedMonth: () => {},
 });
 
 function MeetingsProvider({ children }: { children: React.ReactNode }) {
     const [state, dispatch] = React.useReducer(reducer, initialState);
-    const { userSelectedDate, monthArray, selectedMonthIndex, meetings, isLoading } = state;
+    const { userSelectedDate, selectedMonthIndex, meetings, isLoading } = state;
 
     async function postMeeting(newMeeting: Meeting) {
         dispatch({ type: 'toggleLoading' });
         console.log(newMeeting);
         const data = await postMeetingDB(newMeeting);
         dispatch({ type: 'toggleLoading' });
-        if (data?.status === 'success') {
+        if (data) {
             dispatch({ type: 'postMeeting', payload: newMeeting });
             alert('Successfully created meeting!');
         }
@@ -59,8 +73,8 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'toggleLoading' });
         const data = await getAllMeetingsDB();
         dispatch({ type: 'toggleLoading' });
-        if (data?.status === 'success') {
-            dispatch({ type: 'getAllMeetings', payload: data.meetings });
+        if (data) {
+            dispatch({ type: 'getAllMeetings', payload: data });
         }
     }
 
@@ -68,16 +82,16 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'toggleLoading' });
         const data = await getMeetingDB(meetingId);
         dispatch({ type: 'toggleLoading' });
-        if (data?.status === 'success') {
+        if (data) {
             dispatch({ type: 'getMeeting', payload: data.meeting });
         }
     }
 
-    async function putMeeting(meetingId: string, updatedMeeting: Meeting) {
+    async function putMeeting(updatedMeeting: Meeting) {
         dispatch({ type: 'toggleLoading' });
-        const data = await putMeetingDB(meetingId, updatedMeeting);
+        const data = await putMeetingDB(updatedMeeting);
         dispatch({ type: 'toggleLoading' });
-        if (data?.status === 'success') {
+        if (data) {
             dispatch({ type: 'putMeeting', payload: updatedMeeting });
             alert('Successfully updated meeting!');
         }
@@ -87,7 +101,7 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'toggleLoading' });
         const data = await deleteMeetingDB(meetingId);
         dispatch({ type: 'toggleLoading' });
-        if (data?.status === 'success') {
+        if (data) {
             dispatch({ type: 'deleteMeeting', payload: meetingId });
             alert('Successfully deleted meeting!');
         }
@@ -95,6 +109,21 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
 
     function toggleLoading() {
         dispatch({ type: 'toggleLoading' });
+    }
+
+    const getMonth = (month = dayjs().month()) => {
+        const year = dayjs().year();
+        const firstDay = dayjs().set("month", month).set("year", year).startOf("month").day();
+    
+        let dayCounter = -firstDay;
+    
+        return Array.from({length: 5}, () => {
+            return Array.from({length: 7}, () => dayjs(new Date(year, month, ++dayCounter)));
+        });
+    }
+
+    function setUserSelectedMonth(index: number) {
+        dispatch({ type: 'setUserSelectedMonth', payload: { index: index, monthArray: getMonth(index) } });
     }
 
     async function postMeetingDB(newMeeting: Meeting) {
@@ -124,8 +153,9 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
             });
 
             const data = await res.json();
-            console.log(data);
-            return data;
+            const str = JSON.stringify(data.meetings);
+            const meetings = JSON.parse(str).map(meetingMapper);
+            return meetings;
         } catch {
             alert('Failed to fetch meetings data');
         }
@@ -148,9 +178,9 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
-    async function putMeetingDB(meetingId: string, updatedMeeting: Meeting) {
+    async function putMeetingDB(updatedMeeting: Meeting) {
         try {
-            const res = await fetch(`http://localhost:8000/meetings/${meetingId}`, {
+            const res = await fetch(`http://localhost:8000/meetings/${updatedMeeting.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -183,8 +213,29 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
+
+    useEffect(() => {
+        async function test() {
+            await getAllMeetings();
+        }
+        test();
+    }, []); 
+
     return (
-        <MeetingsContext.Provider value={{ userSelectedDate, monthArray, selectedMonthIndex, meetings, isLoading, postMeeting, getAllMeetings, getMeeting, putMeeting, deleteMeeting, toggleLoading }}>
+        <MeetingsContext.Provider value={{
+            userSelectedDate,
+            monthArray: getMonth(selectedMonthIndex),
+            selectedMonthIndex,
+            meetings,
+            isLoading,
+            postMeeting,
+            getAllMeetings,
+            getMeeting,
+            putMeeting,
+            deleteMeeting,
+            toggleLoading,
+            setUserSelectedMonth,
+        }}>
             {children}
         </MeetingsContext.Provider>
     );

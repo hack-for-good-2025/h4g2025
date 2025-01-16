@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { AppBar, Toolbar, IconButton, Typography, Button, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
-import NewMeetingPopover from './NewMeetingPopover';
+import CreateEditMeetingPopover from './CreateEditMeetingPopover';
 import { Meeting } from '../Models/MeetingsModels';
+import { useMeetings } from '../Contexts/Hooks/MeetingsContextHook';
+import { useAuth } from '../Contexts/Hooks/AuthContextHook';
+import { useNavigate } from 'react-router-dom';
 
-interface MenuBarProps {
-    postMeeting: (meeting: Meeting) => void;
-}
-
-const MenuBar: React.FC<MenuBarProps> = ({ postMeeting }) => {
+const MenuBar: React.FC = ({}) => {
+    const { postMeeting } = useMeetings();
+    const { logout, loadingToggle } = useAuth();
+    const navigate = useNavigate();
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
     
     const handleNewMeeting = () => {
@@ -27,8 +29,9 @@ const MenuBar: React.FC<MenuBarProps> = ({ postMeeting }) => {
     };
 
     const handleLogout = () => {
-        // Logic for logging out
-        console.log('Logged out');
+        loadingToggle();
+        navigate('/');
+        logout();
     };
 
     return (
@@ -51,7 +54,7 @@ const MenuBar: React.FC<MenuBarProps> = ({ postMeeting }) => {
                 </Toolbar>
             </AppBar>
             {isPopoverOpen && (
-                <NewMeetingPopover onSave={handleSaveMeeting} onClose={handleClosePopover} />
+                <CreateEditMeetingPopover onSave={handleSaveMeeting} onClose={handleClosePopover} />
             )}
         </>
     );
