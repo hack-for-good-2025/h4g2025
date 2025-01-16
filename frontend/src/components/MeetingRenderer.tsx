@@ -13,8 +13,8 @@ const MeetingRenderer: React.FC<MeetingRendererProps> = ({ day, meetings }) => {
     const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
 
     // Sort meetings by start time
-    const sortedMeetings = meetings.sort((a, b) => a.startTime.valueOf() - b.startTime.valueOf());
-    const filteredMeetings = sortedMeetings.filter(meeting => meeting.startTime.isSame(day, 'day'));
+    const sortedMeetings = meetings.sort((a, b) => a.start_time.valueOf() - b.start_time.valueOf());
+    const filteredMeetings = sortedMeetings.filter(meeting => meeting.start_time.isSame(day, 'day'));
     const handleClick = (event: React.MouseEvent<HTMLElement>, meeting: Meeting) => {
         setAnchorEl(event.currentTarget);
         setSelectedMeeting(meeting);
