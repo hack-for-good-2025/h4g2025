@@ -3,8 +3,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./Contexts/AuthContext";
 import ProtectedRoute from "./Pages/ProtectedRoute";
 
-import Navigation from "./Components/Navigation";
-import SpinnerFull from "./Components/SpinnerFull";
+import Navigation from "./Components/Navigation.tsx";
+import SpinnerFull from "./Components/SpinnerFull.tsx";
 import CalenderPage from "./Pages/CalenderPage.tsx";
 
 const HomePage = lazy(() => import("./Pages/HomePage"));

@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { useDateStore } from "../consts/date"; // Adjust the import path as necessary
+import { useDateStore } from "../consts/date";
 import MonthViewBox from "./MonthViewBox";
 
 export default function MonthView() {
