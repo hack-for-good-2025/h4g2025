@@ -1,16 +1,7 @@
 import React, { useState } from 'react';
 import MeetingPopover from './MeetingPopover';
 import { Dayjs } from 'dayjs';
-
-export interface Meeting {
-  id: string;
-  title: string;
-  startTime: Dayjs;
-  endTime: Dayjs;
-  description: string;
-  organiserId: string;
-  participants: string[];
-}
+import { Meeting } from '../Models/MeetingsModels';
 
 interface MeetingRendererProps {
   day: Dayjs | null;

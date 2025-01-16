@@ -3,17 +3,22 @@ import { AppBar, Toolbar, IconButton, Typography, Button, Tooltip } from '@mui/m
 import AddIcon from '@mui/icons-material/Add';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import NewMeetingPopover from './NewMeetingPopover';
+import { Meeting } from '../Models/MeetingsModels';
 
-const MenuBar: React.FC = () => {
+interface MenuBarProps {
+    postMeeting: (meeting: Meeting) => void;
+}
+
+const MenuBar: React.FC<MenuBarProps> = ({ postMeeting }) => {
     const [isPopoverOpen, setIsPopoverOpen] = useState(false);
     
     const handleNewMeeting = () => {
         setIsPopoverOpen(true);
     };
 
-    const handleSaveMeeting = (meeting: any) => {
-        // Logic for saving the new meeting
-        console.log('New meeting saved', meeting);
+    function handleSaveMeeting(meeting: Meeting){
+        postMeeting(meeting);
+        console.log(meeting);
         setIsPopoverOpen(false);
     };
 

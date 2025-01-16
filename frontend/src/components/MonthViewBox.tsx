@@ -1,5 +1,6 @@
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import MeetingRenderer from "./MeetingRenderer";
+import { useMeetings } from "../Contexts/Hooks/MeetingsContextHook";
 
 export default function MonthViewBox({
     day,
@@ -15,42 +16,8 @@ export default function MonthViewBox({
     const isFirstDay = day.date() === 1;
     const isToday = day.isSame(new Date(), "day");
     const isCurrentMonth = day.isSame(new Date(), "month");
-    const meetings = [{
-        id: '1',
-        title: 'Team Standup',
-        startTime: dayjs(new Date()).hour(9).minute(0).add(1, 'day'),
-        endTime: dayjs(new Date()).hour(9).minute(30).add(1, 'day'),
-        description: 'Daily team standup meeting',
-        organiserId: 'organiser1',
-        participants: ['user1', 'user2', 'user3']
-      },
-      {
-        id: '2',
-        title: 'Project Planning test test test',
-        startTime: dayjs(new Date()).hour(10).minute(0),
-        endTime: dayjs(new Date()).hour(11).minute(0),
-        description: 'Planning for the new project',
-        organiserId: 'organiser2',
-        participants: ['user1', 'user4']
-      },
-      {
-        id: '3',
-        title: 'Client Call',
-        startTime: dayjs(new Date()).hour(13).minute(0),
-        endTime: dayjs(new Date()).hour(14).minute(0),
-        description: 'Call with the client to discuss requirements',
-        organiserId: 'organiser3',
-        participants: ['user2', 'user5']
-      },
-      {
-        id: '4',
-        title: 'Design Review',
-        startTime: dayjs(new Date()).hour(15).minute(0),
-        endTime: dayjs(new Date()).hour(16).minute(0),
-        description: 'Review of the new design mockups',
-        organiserId: 'organiser4',
-        participants: ['user1', 'user3', 'user6']
-      }];
+    const { meetings } = useMeetings();
+    console.log(meetings)
 
     return (
         <div
