@@ -12,6 +12,15 @@ This web application serves as a cost-effective digital personal assistant (PA) 
 - **Reminders:** Automated timers to send reminders for scheduled meetings and tasks.
 - **(Upcoming) Email Summarization:** Generate summaries of email threads (currently under development).
 
+## How it solves the problem statement
+
+- The **reminder feature** reduces manual tracking by automating notifications.
+- The **login system** ensures secure access to the application.
+- The **task management system** simplifies follow-up tasks and ensures timely completion.
+- The **meetings management system** streamlines the scheduling process and ensures efficient time management.
+- The upcoming **email summarization feature** will save administrators time by condensing lengthy email threads into concise summaries.
+- The application is cost-effective and easy to use, making it accessible to a wide range of users.
+
 ## Technologies Used
 
 ### Frontend
