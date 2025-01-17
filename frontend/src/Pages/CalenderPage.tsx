@@ -1,7 +1,16 @@
+import MainView from "../Components/MainView";
+import Spinner from "../Components/Spinner";
+import { useMeetings } from "../Contexts/Hooks/MeetingsContextHook";
+
 function CalenderPage() {
+    const { isLoading } = useMeetings();
+    if (isLoading) {
+        return <Spinner />;
+    }
+
     return (
         <div>
-            <h1>Calender</h1>
+            <MainView/>
         </div>
     );
 }
