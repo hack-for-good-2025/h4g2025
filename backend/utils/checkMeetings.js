@@ -15,8 +15,8 @@ async function checkMeetings() {
         const reminderTime = new Date(meetingStartTime.getTime() - 15 * 60 * 1000);
         const currentTime = new Date();
 
-        // Check if the reminder time is within the next 5 minutes
-        if (reminderTime <= currentTime && reminderTime > new Date(currentTime.getTime() - 5 * 60 * 1000)) {
+        // Check if the reminder time is within the next 5 minute
+        if (reminderTime >= currentTime && reminderTime <= new Date(currentTime.getTime() + 5 * 60 * 1000)) {
           // If the reminder has not been sent yet, send it
           if (!meetingData["is_reminded"]) {
             if (meetingData.participants && meetingData.participants.length > 0) {
