@@ -8,7 +8,7 @@ import SpinnerFull from "./Components/SpinnerFull.tsx";
 import CalenderPage from "./Pages/CalenderPage.tsx";
 import { MeetingsProvider } from "./Contexts/MeetingsContext.tsx";
 
-const HomePage = lazy(() => import("./Pages/HomePage"));
+// const HomePage = lazy(() => import("./Pages/HomePage"));
 const Login = lazy(() => import("./Pages/Login"));
 const PageNotFound = lazy(() => import("./Pages/PageNotFound"));
 const CreateUser = lazy(() => import("./Pages/CreateUser"));
@@ -23,7 +23,7 @@ function App() {
           </header>
           <Suspense fallback={<SpinnerFull />}>
             <Routes>
-              <Route index element={<HomePage />} />
+              <Route index element={<Login />} />
               <Route
                 path="calender"
                 element={
