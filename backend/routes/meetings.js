@@ -2,6 +2,7 @@ const express = require('express');
 const { db } = require('../firebase.js')
 const { collection, doc, addDoc, deleteDoc, getDoc, getDocs, updateDoc, serverTimestamp } = require('firebase/firestore'); 
 const router = express.Router();
+const Email = require("../utils/email");
 
 const convertTimestamp = (data) => {
     if (data.created_at) {
@@ -15,8 +16,11 @@ router.post('/', async (req, res) => {
     try {
         const { title, description, start_time, end_time, organiser_id, participants } = req.body;
 
-        if (!title || !start_time || !end_time || !organiser_id) {
-            return res.status(400).send({ message: 'Missing required fields: title, start_time, end_time, or organiser_id' });
+        // Validate required fields
+        if (!title || !start_time || !end_time) {
+            return res.status(400).send({
+                message: 'Missing required fields: title, start_time, end_time, or organiser_id',
+            });
         }
 
         const newMeeting = {
@@ -24,15 +28,40 @@ router.post('/', async (req, res) => {
             description: description || '',
             start_time,
             end_time,
-            organiser_id,
+            organiser_id: organiser_id || '',
             participants: participants || [],
-            created_at: serverTimestamp()
+            created_at: serverTimestamp(),
+            is_reminded: false
         };
-          
-        const docRef = await addDoc(collection(db, "meetings"), newMeeting);
-        res.status(201).send({ message: 'Meeting scheduled successfully', id: docRef.id });
+
+        // Save the meeting to the database
+        const docRef = await addDoc(collection(db, 'meetings'), newMeeting);
+
+        // Send confirmation emails to participants
+        if (participants && participants.length > 0) {
+            const emailPromises = participants.map(async (email) => {
+                // Extract name from email (before the '@')
+                const name = email.split('@')[0];
+                const emailInstance = new Email(email, name);
+
+                // Send the meeting confirmation email
+                await emailInstance.sendMeetingConfirmation(title, description, start_time, end_time);
+            });
+
+            // Wait for all emails to be sent
+            await Promise.all(emailPromises);
+        }
+
+        res.status(201).send({
+            message: 'Meeting scheduled successfully and confirmation emails sent',
+            id: docRef.id,
+        });
     } catch (error) {
-        res.status(500).send({ message: 'Failed to schedule meeting', error: error.message });
+        console.error('Error scheduling meeting or sending emails:', error);
+        res.status(500).send({
+            message: 'Failed to schedule meeting or send emails',
+            error: error.message,
+        });
     }
 });
 
