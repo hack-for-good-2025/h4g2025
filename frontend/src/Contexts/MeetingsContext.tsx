@@ -59,10 +59,8 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
     const { userSelectedDate, selectedMonthIndex, meetings, isLoading } = state;
 
     async function postMeeting(newMeeting: Meeting) {
-        dispatch({ type: 'toggleLoading' });
         console.log(newMeeting);
         const data = await postMeetingDB(newMeeting);
-        dispatch({ type: 'toggleLoading' });
         if (data) {
             dispatch({ type: 'postMeeting', payload: newMeeting });
             alert('Successfully created meeting!');
@@ -88,9 +86,7 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
     }
 
     async function putMeeting(updatedMeeting: Meeting) {
-        dispatch({ type: 'toggleLoading' });
         const data = await putMeetingDB(updatedMeeting);
-        dispatch({ type: 'toggleLoading' });
         if (data) {
             dispatch({ type: 'putMeeting', payload: updatedMeeting });
             alert('Successfully updated meeting!');
@@ -98,9 +94,7 @@ function MeetingsProvider({ children }: { children: React.ReactNode }) {
     }
 
     async function deleteMeeting(meetingId: string) {
-        dispatch({ type: 'toggleLoading' });
         const data = await deleteMeetingDB(meetingId);
-        dispatch({ type: 'toggleLoading' });
         if (data) {
             dispatch({ type: 'deleteMeeting', payload: meetingId });
             alert('Successfully deleted meeting!');

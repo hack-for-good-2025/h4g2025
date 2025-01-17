@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import MeetingPopover from './MeetingPopover';
 import { Dayjs } from 'dayjs';
 import { Meeting } from '../Models/MeetingsModels';
+import { useAuth } from '../Contexts/Hooks/AuthContextHook';
 
 interface MeetingRendererProps {
   day: Dayjs | null;
@@ -11,10 +12,13 @@ interface MeetingRendererProps {
 const MeetingRenderer: React.FC<MeetingRendererProps> = ({ day, meetings }) => {
     const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
     const [selectedMeeting, setSelectedMeeting] = useState<Meeting | null>(null);
+    const { user } = useAuth();
 
     // Sort meetings by start time
     const sortedMeetings = meetings.sort((a, b) => a.start_time.valueOf() - b.start_time.valueOf());
     const filteredMeetings = sortedMeetings.filter(meeting => meeting.start_time.isSame(day, 'day'));
+    const userMeetings = filteredMeetings.filter(meeting => meeting.participants.includes(user?.email || ''));
+
     const handleClick = (event: React.MouseEvent<HTMLElement>, meeting: Meeting) => {
         setAnchorEl(event.currentTarget);
         setSelectedMeeting(meeting);
@@ -35,7 +39,7 @@ const MeetingRenderer: React.FC<MeetingRendererProps> = ({ day, meetings }) => {
                 width: '100%',
             }
         }>
-            {filteredMeetings.map(meeting => (
+            {userMeetings.map(meeting => (
                 <div 
                     key={meeting.id} 
                     className="meeting-bubble"
