@@ -1,14 +1,21 @@
 extends baseEmail
 
 block content
-    p Hi,
-    p Your meeting is starting in 15 minutes,
-    table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
-        tbody
-            tr
-                td(align='left')
-                    table(role='presentation', border='0', cellpadding='0', cellspacing='0')
-                        tbody
-                            tr
-                                td
-    p If you dont have a meeting, please ignore this email!
+  p Reminder: Your meeting is scheduled to start in 
+    b 15 minutes
+  p Here are the details:
+  ul
+    li
+      strong Title:
+      |  #{title}
+    li
+      strong Description:
+      |  #{description || 'N/A'}
+    li
+      strong Start Time:
+      |  #{startTime}
+    li
+      strong End Time:
+      |  #{endTime}
+  p
+    a(href=calendarLink target="_blank") Add to Google Calendar
