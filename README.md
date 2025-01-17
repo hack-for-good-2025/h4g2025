@@ -1,4 +1,4 @@
-# Digital PA System for Hack for Good 2025
+# SmartDesk for Hack for Good 2025
 
 ## Description
 
@@ -8,7 +8,7 @@ This web application serves as a cost-effective digital personal assistant (PA) 
 
 - **Login/Logout:** Secure authentication for users.
 - **Meetings Management:** Schedule, update, and view meetings efficiently.
-- **Task Management:** Assign and track follow-up tasks for yourself or others.
+- **(Upcoming) Task Management:** Assign and track follow-up tasks for yourself or others.
 - **Reminders:** Automated timers to send reminders for scheduled meetings and tasks.
 - **(Upcoming) Email Summarization:** Generate summaries of email threads (currently under development).
 
@@ -16,7 +16,7 @@ This web application serves as a cost-effective digital personal assistant (PA) 
 
 - The **reminder feature** reduces manual tracking by automating notifications.
 - The **login system** ensures secure access to the application.
-- The **task management system** simplifies follow-up tasks and ensures timely completion.
+- The  upcoming **task management system** simplifies follow-up tasks and ensures timely completion.
 - The **meetings management system** streamlines the scheduling process and ensures efficient time management.
 - The upcoming **email summarization feature** will save administrators time by condensing lengthy email threads into concise summaries.
 - The application is cost-effective and easy to use, making it accessible to a wide range of users.
@@ -36,7 +36,7 @@ This web application serves as a cost-effective digital personal assistant (PA) 
 
 ## Installation
 
-Follow these steps to set up the project locally using yout terminal:
+Follow these steps to set up the project locally using your terminal:
 
 1. **Clone the Repository:**
 
@@ -52,9 +52,10 @@ Follow these steps to set up the project locally using yout terminal:
     cd frontend
     npm install
 
-    # Install backend dependencies
+    # Install backend dependencies and go back to the root directory
     cd ../backend
     npm install
+    cd ..
    ```
 3. **Run the application**
 
