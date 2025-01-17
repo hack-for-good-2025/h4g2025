@@ -17,7 +17,6 @@ const MeetingPopover: React.FC<MeetingPopoverProps> = ({ anchorEl, onClose, meet
     const open = Boolean(anchorEl);
     const handleEdit = () => {
         setIsPopoverOpen(true);
-        console.log(isPopoverOpen);
     }
 
     return (
