@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import '../App.css';
 import { Meeting } from '../Models/MeetingsModels';
+import { useUsers } from '../Contexts/Hooks/UsersContextHook';
+import Select from 'react-select';
 
 interface CreateEditMeetingPopoverProps {
   onSave: (meeting: Meeting) => void;
@@ -16,6 +18,7 @@ const CreateEditMeetingPopover: React.FC<CreateEditMeetingPopoverProps> = ({ onS
   const [description, setDescription] = useState(meeting?.description || '');
   const [organiser_id, setOrganiserId] = useState(meeting?.organiser_id || '');
   const [participants, setParticipants] = useState<string[]>(meeting?.participants || []);
+  const { users } = useUsers();
 
   const handleSave = () => {
     if (title && start_time && end_time && organiser_id) {
@@ -35,9 +38,19 @@ const CreateEditMeetingPopover: React.FC<CreateEditMeetingPopoverProps> = ({ onS
     }
   };
 
+  const userOptions = users.map(user => ({
+    value: user.email,
+    label: user.displayName,
+  }));
+
+  const handleParticipantsChange = (selectedOptions: any) => {
+    const selectedParticipants = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
+    setParticipants(selectedParticipants);
+  };
+
   return (
     <div className="popover">
-      <h3>New Meeting</h3>
+      <h3>{meeting ? 'Edit Meeting' : 'Create Meeting'}</h3>
       <form>
         <div>
           <label>Title:</label>
@@ -45,11 +58,11 @@ const CreateEditMeetingPopover: React.FC<CreateEditMeetingPopoverProps> = ({ onS
         </div>
         <div>
           <label>Start Time:</label>
-          <input type="datetime-local" value={start_time?.format("YYYY-MM-DDThh:mm")} onChange={(e) => setStartTime(dayjs(e.target.value))} required />
+          <input type="datetime-local" value={start_time?.format("YYYY-MM-DDTHH:mm") || ''} onChange={(e) => setStartTime(dayjs(e.target.value))} required />
         </div>
         <div>
           <label>End Time:</label>
-          <input type="datetime-local" value={end_time?.format("YYYY-MM-DDThh:mm")} onChange={(e) => setEndTime(dayjs(e.target.value))} required />
+          <input type="datetime-local" value={end_time?.format("YYYY-MM-DDTHH:mm") || ''} onChange={(e) => setEndTime(dayjs(e.target.value))} required />
         </div>
         <div>
           <label>Description:</label>
@@ -61,7 +74,12 @@ const CreateEditMeetingPopover: React.FC<CreateEditMeetingPopoverProps> = ({ onS
         </div>
         <div>
           <label>Participants:</label>
-          <input type="text" value={participants.join(', ')} onChange={(e) => setParticipants(e.target.value.split(', '))} />
+          <Select
+            isMulti
+            options={userOptions}
+            value={userOptions.filter(option => participants.includes(option.value))}
+            onChange={handleParticipantsChange}
+          />
         </div>
         <div>
           <button type="button" onClick={handleSave}>Save</button>

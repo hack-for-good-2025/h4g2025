@@ -3,6 +3,7 @@ import { Popover, Typography, List, ListItem, ListItemText } from '@mui/material
 import { Meeting } from '../Models/MeetingsModels';
 import { useMeetings } from '../Contexts/Hooks/MeetingsContextHook';
 import CreateEditMeetingPopover from './CreateEditMeetingPopover';
+import { useUsers } from '../Contexts/Hooks/UsersContextHook';
 
 
 interface MeetingPopoverProps {
@@ -14,10 +15,12 @@ interface MeetingPopoverProps {
 const MeetingPopover: React.FC<MeetingPopoverProps> = ({ anchorEl, onClose, meeting }) => {
     const { putMeeting, deleteMeeting } = useMeetings();
     const [ isPopoverOpen, setIsPopoverOpen ] = useState(false);
+    const { users } = useUsers();
     const open = Boolean(anchorEl);
     const handleEdit = () => {
         setIsPopoverOpen(true);
     }
+    const participantNames = meeting.participants.map(participant => users.find(user => user.email === participant)?.displayName);
 
     return (
         <div>
@@ -59,7 +62,7 @@ const MeetingPopover: React.FC<MeetingPopoverProps> = ({ anchorEl, onClose, meet
                             <strong>Participants:</strong>
                         </Typography>
                         <List dense>
-                            {meeting.participants.map((participant, index) => (
+                            {participantNames.map((participant, index) => (
                                 <ListItem key={index}>
                                     <ListItemText primary={participant} />
                                 </ListItem>
