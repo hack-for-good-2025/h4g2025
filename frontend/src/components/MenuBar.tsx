@@ -39,7 +39,7 @@ const MenuBar: React.FC = ({}) => {
             <AppBar position="fixed" enableColorOnDark>
                 <Toolbar>
                     <Typography variant="h6" style={{ flexGrow: 1 }}>
-                        My App
+                        SmartDesk
                     </Typography>
                     <Tooltip title="New Meeting" >
                         <IconButton edge="start" color="inherit" aria-label="new meeting" onClick={handleNewMeeting}>
