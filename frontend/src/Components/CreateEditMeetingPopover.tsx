@@ -20,6 +20,7 @@ const CreateEditMeetingPopover: React.FC<CreateEditMeetingPopoverProps> = ({ onS
   const handleSave = () => {
     if (title && start_time && end_time && organiser_id) {
       const newMeeting: Meeting = {
+        id: meeting?.id,
         title,
         start_time,
         end_time,
