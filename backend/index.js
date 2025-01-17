@@ -7,6 +7,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const cron = require('node-cron');
 const checkMeetings = require('./utils/checkMeetings.js')
+const userRoutes = require("./routes/users.js")
 
 dotenv.config({ path: './config.env' });
 // Implement CORS
@@ -17,6 +18,8 @@ app.use(express.json());
 
 app.use("/auth", authRoutes);
 app.use("/meetings", meetingsRoutes);
+app.use("/users", userRoutes);
+
 
 app.listen(port, async () => {
   console.log(`Server running at http://localhost:${port}`);
